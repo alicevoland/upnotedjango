@@ -1,10 +1,10 @@
 from django.urls import include, path
 from rest_framework import routers
 
-from api.views import TestView
+from api.views import TestView, NoteViewSet
 
 router = routers.DefaultRouter()
-# router.register(r'users', UserViewSet)
+router.register(r'notes', NoteViewSet)
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.

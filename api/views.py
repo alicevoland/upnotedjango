@@ -1,10 +1,16 @@
+import datetime
 from contextvars import Token
 
 # Create your views here.
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
+
+from api.models import Note
+from api.serializers import NoteSerializer
 
 
 class AuthToken(ObtainAuthToken):
@@ -20,6 +26,21 @@ class AuthToken(ObtainAuthToken):
             'user_id': user.pk,
             'email': user.email
         })
+
+class NoteViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = Note.objects.all()
+    serializer_class = NoteSerializer
+
+    def get_queryset(self):
+        return self.queryset.filter(user__exact=self.request.user)
+
+    def perform_create(self, serializer):
+        """Sets the user profile to the logged in User."""
+        serializer.save(user=self.request.user)
+
+    def perform_update(self, serializer):
+        serializer.save(updated_at=datetime.datetime.now())
 
 
 class TestView(APIView):
