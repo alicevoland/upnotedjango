@@ -20,5 +20,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('api.urls')),
     re_path(r"^auth/", include("djoser.urls")),
-    re_path(r"^auth/", include("djoser.urls.jwt")),
+    # re_path(r"^auth/", include("djoser.urls.jwt")),
+    re_path(r"^auth/", include("djoser.urls.authtoken")),
 ]
